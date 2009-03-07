@@ -1,0 +1,191 @@
+testscenarios: extensions to python unittest to allow declarative
+dependency injection ('scenarios') by tests.
+
+Copyright (C) 2009  Robert Collins <robertc@robertcollins.net>
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+
+testscenarios provides clean dependency injection for python unittest style
+tests. This can be used for interface testing (testing many implementations via
+a single test suite) or for classic dependency injection (provide tests with
+dependencies externally to the test code itself, allowing easy testing in
+different situations).
+
+Dependencies:
+=============
+
+* Python 2.4+
+* testtools
+
+
+Why TestScenarios
+=================
+
+Standard Python unittest.py provides on obvious method for running a single
+test_foo method with two (or more) scenarios: by creating a mix-in that
+provides the functions, objects or settings that make up the scenario. This is
+however limited and unsatisfying. Firstly, when two projects are cooperating
+on a test suite (for instance, a plugin to a larger project may want to run
+the standard tests for a given interface on its implementation), then it is
+easy for them to get out of sync with each other: when the list of TestCase
+classes to mix-in with changes, the plugin will either fail to run some tests
+or error trying to run deleted tests. Secondly, its not as easy to work with
+runtime-created-subclasses (a way of dealing with the aforementioned skew)
+because they require more indirection to locate the source of the test, and will
+often be ignored by e.g. pyflakes pylint etc.
+
+It is the intent of testscenarios to make dynamically running a single test
+in multiple scenarios clear, easy to debug and work with even when the list
+of scenarios is dynamically generated.
+
+Getting Scenarios applied:
+==========================
+
+At its heart the concept is simple. For a given test object with a list of
+scenarios we prepare a new test object for each scenario. This involves:
+ * Clone the test to a new test with a new id uniquely distinguishing it.
+ * Apply the scenario to the test by setting each key, value in the scenario
+   as attributes on the test object.
+
+There are some complicating factors around making this happen seamlessly. These
+factors are in two areas:
+ * Choosing what scenarios to use. (See Setting Scenarios For A Test).
+ * Getting the multiplication to happen. 
+
+Subclasssing
+++++++++++++
+
+If you can subclass TestWithScenarios, then the ``run()`` method in
+TestWithScenarios will take care of test multiplication. It will at test
+execution act as a generator causing multiple tests to execute. For this to 
+work reliably TestWithScenarios must be first in the MRO and you cannot
+override run() or __call__. This is the most robust method, in the sense
+that any test runner or test loader that obeys the python unittest protocol
+will run all your scenarios.
+
+Manual generation
++++++++++++++++++
+
+If you cannot subclass TestWithScenarios (e.g. because you are using
+TwistedTestCase, or TestCaseWithResources, or any one of a number of other
+useful test base classes, or need to override run() or __call__ yourself) then 
+you can cause scenario application to happen later by calling
+``testscenarios.generate_scenarios()``. For instance::
+  >>> mytests = loader.loadTestsFromNames([...])
+  >>> test_suite = TestSuite()
+  >>> test_suite.addTests(generate_scenarios(mytests))
+  >>> runner.run(test_suite)
+
+Testloaders
++++++++++++
+
+Some test loaders support hooks like ``load_tests`` and ``test_suite``.
+Ensuring your tests have had scenario application done through these hooks can
+be a good idea - it means that external test runners (which support these hooks
+like ``nose``, ``trial``, ``tribunal``) will still run your scenarios. (Of
+course, if you are using the subclassing approach this is already a surety).
+With ``load_tests``::
+
+  >>> def load_tests(standard_tests, module, loader):
+  >>>     result = loader.suiteClass()
+  >>>     result.addTests(generate_scenarios(standard_tests))
+  >>>     return result
+
+With ``test_suite``::
+
+  >>> def test_suite():
+  >>>     loader = TestLoader()
+  >>>     tests = loader.loadTestsFromName(__name__)
+  >>>     result = loader.suiteClass()
+  >>>     result.addTests(generate_scenarios(tests))
+  >>>     return result
+
+
+Setting Scenarios for a test:
+=============================
+
+A sample test using scenarios can be found in the doc/ folder.
+
+See pydoc testscenarios for details.
+
+On the TestCase
++++++++++++++++
+
+You can set a scenarios attribute on the test case::
+
+  >>> class MyTest(TestCase):
+  >>>
+  >>>     scenarios = [scenario1, scenario2, ...]
+
+This provides the main interface by which scenarios are found for a given test.
+Subclasses will inherit the scenarios (unless they override the attribute).
+
+After loading
++++++++++++++
+
+Test scenarios can also be generated arbitrarily later, as long as the test has
+not yet run. Simply replace (or alter, but be aware that many tests may share a
+single scenarios attribute) the scenarios attribute. For instance in this
+example some third party tests are extended to run with a custom scenario.
+
+  >>> for test in iterate_tests(stock_library_tests):
+  >>>     if isinstance(test, TestVFS):
+  >>>         test.scenarios = test.scenarios + [my_vfs_scenario]
+  >>> ...
+  >>> suite.addTests(generate_scenarios(stock_library_tests))
+
+Note that adding scenarios to a test that has already been parameterised via
+generate_scenarios generates a cross product::
+  >>> class CrossProductDemo(TestCase):
+  >>>     scenarios = [scenario_0_0, scenario_0_1]
+  >>>     def test_foo(self):
+  >>>         return
+  >>> suite.addTests(generate_scenarios(CrossProductDemo("test_foo")))
+  >>> for test in iterate_tests(suite):
+  >>>     test.scenarios = test.scenarios + [scenario_1_0, scenario_1_1]
+  >>> suite2.addTests(generate_scenarios(suite))
+  >>> print suite2.countTestCases()
+  4
+
+Dynamic Scenarios
++++++++++++++++++
+
+A common use case is to have the list of scenarios be dynamic based on plugins
+and available libraries. An easy way to do this is to provide a global scope
+scenarios somewhere relevant to the tests that will use it, and then that can
+be customised, or dynamically populate your scenarios from a registry etc.
+For instance::
+  >>> hash_scenarios = []
+  >>> try:
+  >>>     import md5
+  >>> except ImportError:
+  >>>     pass
+  >>> else:
+  >>>     hash_scenarios.append(("md5", "hash": md5.new))
+  >>> try:
+  >>>     import sha1
+  >>> except ImportError:
+  >>>     pass
+  >>> else:
+  >>>     hash_scenarios.append(("sha1", "hash": sha1.new))
+  >>>
+  >>> class TestHashContract(TestCase):
+  >>>
+  >>>     scenarios = hash_scenarios
+  >>>
+  >>> class TestHashPerformance(TestCase):
+  >>>
+  >>>     scenarios = hash_scenarios
