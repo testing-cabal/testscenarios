@@ -34,6 +34,7 @@ def test_suite():
 def load_tests(standard_tests, module, loader):
     test_modules = [
         'testcase',
+        'scenarios',
         ]
     prefix = "testscenarios.tests.test_"
     test_mod_names = [prefix + test_module for test_module in test_modules]

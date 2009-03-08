@@ -29,9 +29,15 @@ See the README for a manual, and the docstrings on individual functions and
 methods for details.
 """
 
+__all__ = [
+    'TestWithScenarios',
+    'generate_scenarios',
+    ]
+
 
 import unittest
 
+from testscenarios.scenarios import generate_scenarios
 from testscenarios.testcase import TestWithScenarios
 
 

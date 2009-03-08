@@ -18,30 +18,33 @@
 #
 
 __all__ = [
-    'TestWithScenarios',
+    'generate_scenarios',
     ]
 
 import unittest
 
 from testtools.testcase import clone_test_with_new_id
+from testtools import iterate_tests
 
-from testscenarios.scenarios import generate_scenarios
+def generate_scenarios(test_or_suite):
+    """Yield the tests in test_or_suite with scenario multiplication done.
 
-class TestWithScenarios(unittest.TestCase):
-    """A TestCase with support for scenarios via a scenarios attribute.
-    
-    When a test object which is an instance of TestWithScenarios is run,
-    and there is a non-empty scenarios attribute on the object, the test is
-    multiplied by the run method into one test per scenario. For this to work
-    reliably the TestWithScenarios.run method must not be overriden in a
-    subclass (or overridden compatibly with TestWithScenarios).
+    TestCase objects with no scenarios specified are yielded unaltered. Tests
+    with scenarios are not yielded at all, instead the results of multiplying
+    them by the scenarios they specified gets yielded.
+
+    :param test_or_suite: A TestCase or TestSuite.
+    :return: A generator of tests - objects satisfying the TestCase protocol.
     """
-
-    def run(self, result=None):
-        scenarios = getattr(self, 'scenarios', None)
+    for test in iterate_tests(test_or_suite):
+        scenarios = getattr(test, 'scenarios', None)
         if scenarios:
-            for test in generate_scenarios(self):
-                test.run(result)
-            return
+            for name, parameters in scenarios:
+                newtest = clone_test_with_new_id(test,
+                    test.id() + '(' + name + ')')
+                newtest.scenarios = None
+                for key, value in parameters.iteritems():
+                    setattr(newtest, key, value)
+                yield newtest
         else:
-            return super(TestWithScenarios, self).run(result)
+            yield test
