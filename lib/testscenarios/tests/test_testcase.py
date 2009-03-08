@@ -29,7 +29,9 @@ class TestTestWithScenarios(unittest.TestCase):
             def test_pass(self):
                 pass
         test = ReferenceTest("test_pass")
-        result = test.run()
-
+        result = unittest.TestResult()
+        test.run(result)
+        self.assertTrue(result.wasSuccessful())
+        self.assertEqual(1, result.testsRun)
 
 
