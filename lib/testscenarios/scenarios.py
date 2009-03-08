@@ -18,6 +18,8 @@
 #
 
 __all__ = [
+    'apply_scenario',
+    'apply_scenarios',
     'generate_scenarios',
     ]
 
@@ -25,6 +27,34 @@ import unittest
 
 from testtools.testcase import clone_test_with_new_id
 from testtools import iterate_tests
+
+
+def apply_scenario((name, parameters), test):
+    """Apply scenario to test.
+
+    :param scenario: A tuple (name, parameters) to apply to the test. The test
+        is cloned, its id adjusted to have (name) after it, and the parameters
+        dict is used to update the new test.
+    :param test: The test to apply the scenario to. This test is unaltered.
+    :return: A new test cloned from test, with the scenario applied.
+    """
+    newtest = clone_test_with_new_id(test,
+        test.id() + '(' + name + ')')
+    for key, value in parameters.iteritems():
+        setattr(newtest, key, value)
+    return newtest
+
+
+def apply_scenarios(scenarios, test):
+    """Apply many scenarios to a test.
+
+    :param scenarios: An iterable of scenarios.
+    :param test: A test to apply the scenarios to.
+    :return: A generator of tests.
+    """
+    for scenario in scenarios:
+        yield apply_scenario(scenario, test)
+
 
 def generate_scenarios(test_or_suite):
     """Yield the tests in test_or_suite with scenario multiplication done.
@@ -39,12 +69,8 @@ def generate_scenarios(test_or_suite):
     for test in iterate_tests(test_or_suite):
         scenarios = getattr(test, 'scenarios', None)
         if scenarios:
-            for name, parameters in scenarios:
-                newtest = clone_test_with_new_id(test,
-                    test.id() + '(' + name + ')')
+            for newtest in apply_scenarios(scenarios, test):
                 newtest.scenarios = None
-                for key, value in parameters.iteritems():
-                    setattr(newtest, key, value)
                 yield newtest
         else:
             yield test

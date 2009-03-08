@@ -31,13 +31,15 @@ methods for details.
 
 __all__ = [
     'TestWithScenarios',
+    'apply_scenario',
+    'apply_scenarios',
     'generate_scenarios',
     ]
 
 
 import unittest
 
-from testscenarios.scenarios import generate_scenarios
+from testscenarios.scenarios import apply_scenario, generate_scenarios
 from testscenarios.testcase import TestWithScenarios
 
 

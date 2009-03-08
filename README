@@ -189,3 +189,15 @@ For instance::
   >>> class TestHashPerformance(TestCase):
   >>>
   >>>     scenarios = hash_scenarios
+
+
+Forcing Scenarios
++++++++++++++++++
+
+The ``apply_scenarios`` function can be useful to apply scenarios to a test
+that has none applied. ``apply_scenarios`` is the workhorse for
+``generate_scenarios``, except it takes the scenarios passed in rather than
+introspecting the test object to determine the scenarios. The
+``apply_scenarios`` function does not reset the test scenarios attribute,
+allowing it to be used to layer scenarios without affecting existing scenario
+selection.
