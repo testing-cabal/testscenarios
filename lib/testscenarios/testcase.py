@@ -23,5 +23,19 @@ __all__ = [
 
 import unittest
 
+from testtools.testcase import clone_test_with_new_id
+
 class TestWithScenarios(unittest.TestCase):
     """A TestCase with support for scenarios via a scenarios attribute."""
+
+    def run(self, result=None):
+        scenarios = getattr(self, 'scenarios', None)
+        if scenarios:
+            for name, parameters in scenarios:
+                newtest = clone_test_with_new_id(self,
+                    self.id() + '(' + name + ')')
+                newtest.scenarios = None
+                newtest.run(result)
+            return
+        else:
+            return super(TestWithScenarios, self).run(result)
