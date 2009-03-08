@@ -37,15 +37,26 @@ class TestWithScenarios(unittest.TestCase):
     subclass (or overridden compatibly with TestWithScenarios).
     """
 
+    def _get_scenarios(self):
+        return getattr(self, 'scenarios', None)
+
     def countTestCases(self):
-        scenarios = getattr(self, 'scenarios', None)
+        scenarios = self._get_scenarios()
         if not scenarios:
             return 1
         else:
             return len(scenarios)
 
+    def debug(self):
+        scenarios = self._get_scenarios()
+        if scenarios:
+            for test in generate_scenarios(self):
+                test.debug()
+        else:
+            return super(TestWithScenarios, self).debug()
+
     def run(self, result=None):
-        scenarios = getattr(self, 'scenarios', None)
+        scenarios = self._get_scenarios()
         if scenarios:
             for test in generate_scenarios(self):
                 test.run(result)
