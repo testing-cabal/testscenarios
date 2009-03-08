@@ -26,7 +26,14 @@ import unittest
 from testtools.testcase import clone_test_with_new_id
 
 class TestWithScenarios(unittest.TestCase):
-    """A TestCase with support for scenarios via a scenarios attribute."""
+    """A TestCase with support for scenarios via a scenarios attribute.
+    
+    When a test object which is an instance of TestWithScenarios is run,
+    and there is a non-empty scenarios attribute on the object, the test is
+    multiplied by the run method into one test per scenario. For this to work
+    reliably the TestWithScenarios.run method must not be overriden in a
+    subclass (or overridden compatibly with TestWithScenarios).
+    """
 
     def run(self, result=None):
         scenarios = getattr(self, 'scenarios', None)
@@ -35,6 +42,8 @@ class TestWithScenarios(unittest.TestCase):
                 newtest = clone_test_with_new_id(self,
                     self.id() + '(' + name + ')')
                 newtest.scenarios = None
+                for key, value in parameters.iteritems():
+                    setattr(newtest, key, value)
                 newtest.run(result)
             return
         else:
