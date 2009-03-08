@@ -27,3 +27,11 @@ Coding standards
 
 PEP-8 coding style please, though I'm not nitpicky. Make sure that 'make check'
 passes before sending in a patch.
+
+Code arrangement
+++++++++++++++++
+
+The ``testscenarios`` module should simply import classes and functions from
+more specific modules, rather than becoming large and bloated itself. For
+instance, TestWithScenarios lives in testscenarios.testcase, and is imported in
+the testscenarios __init__.py.

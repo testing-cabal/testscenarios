@@ -17,25 +17,11 @@
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-import sys
+__all__ = [
+    'TestWithScenarios',
+    ]
+
 import unittest
 
-import testscenarios
-
-
-def test_suite():
-    result = unittest.TestSuite()
-    standard_tests = unittest.TestSuite()
-    module = sys.modules['testscenarios.tests']
-    loader = unittest.TestLoader()
-    return load_tests(standard_tests, module, loader)
-
-
-def load_tests(standard_tests, module, loader):
-    test_modules = [
-        'testcase',
-        ]
-    prefix = "testscenarios.tests.test_"
-    test_mod_names = [prefix + test_module for test_module in test_modules]
-    standard_tests.addTests(loader.loadTestsFromNames(test_mod_names))
-    return standard_tests
+class TestWithScenarios(unittest.TestCase):
+    """A TestCase with support for scenarios via a scenarios attribute."""

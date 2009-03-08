@@ -32,6 +32,8 @@ methods for details.
 
 import unittest
 
+from testscenarios.testcase import TestWithScenarios
+
 
 def test_suite():
     import testscenarios.tests

@@ -17,25 +17,19 @@
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-import sys
 import unittest
 
 import testscenarios
 
 
-def test_suite():
-    result = unittest.TestSuite()
-    standard_tests = unittest.TestSuite()
-    module = sys.modules['testscenarios.tests']
-    loader = unittest.TestLoader()
-    return load_tests(standard_tests, module, loader)
+class TestTestWithScenarios(unittest.TestCase):
+
+    def test_no_scenarios_no_error(self):
+        class ReferenceTest(testscenarios.TestWithScenarios):
+            def test_pass(self):
+                pass
+        test = ReferenceTest("test_pass")
+        result = test.run()
 
 
-def load_tests(standard_tests, module, loader):
-    test_modules = [
-        'testcase',
-        ]
-    prefix = "testscenarios.tests.test_"
-    test_mod_names = [prefix + test_module for test_module in test_modules]
-    standard_tests.addTests(loader.loadTestsFromNames(test_mod_names))
-    return standard_tests
+
