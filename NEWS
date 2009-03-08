@@ -8,6 +8,12 @@ IN DEVELOPMENT
 
   CHANGES:
 
+   * Created project. The primary interfaces are
+     ``testscenarios.TestWithScenarios`` and
+     ``testscenarios.generate_scenarios``. Documentation is primarily in
+     README. 
+     (Robert Collins)
+
   IMPROVEMENTS:
 
   BUG FIXES:
