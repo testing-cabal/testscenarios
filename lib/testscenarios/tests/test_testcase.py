@@ -98,3 +98,36 @@ class TestTestWithScenarios(unittest.TestCase):
         self.assertNotEqual(None, test.scenarios)
         self.assertEqual(None, log[0][1].scenarios)
         self.assertEqual(None, log[4][1].scenarios)
+
+    def test_countTestCases_no_scenarios(self):
+        class ReferenceTest(testscenarios.TestWithScenarios):
+            def test_check_foo(self):
+                pass
+        test = ReferenceTest("test_check_foo")
+        self.assertEqual(1, test.countTestCases())
+
+    def test_countTestCases_empty_scenarios(self):
+        class ReferenceTest(testscenarios.TestWithScenarios):
+            scenarios = []
+            def test_check_foo(self):
+                pass
+        test = ReferenceTest("test_check_foo")
+        self.assertEqual(1, test.countTestCases())
+
+    def test_countTestCases_1_scenarios(self):
+        class ReferenceTest(testscenarios.TestWithScenarios):
+            scenarios = [('1', {'foo': 1, 'bar': 2})]
+            def test_check_foo(self):
+                pass
+        test = ReferenceTest("test_check_foo")
+        self.assertEqual(1, test.countTestCases())
+
+    def test_countTestCases_2_scenarios(self):
+        class ReferenceTest(testscenarios.TestWithScenarios):
+            scenarios = [
+                ('1', {'foo': 1, 'bar': 2}),
+                ('2', {'foo': 2, 'bar': 4})]
+            def test_check_foo(self):
+                pass
+        test = ReferenceTest("test_check_foo")
+        self.assertEqual(2, test.countTestCases())
