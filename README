@@ -25,11 +25,13 @@ a single test suite) or for classic dependency injection (provide tests with
 dependencies externally to the test code itself, allowing easy testing in
 different situations).
 
-Dependencies:
-=============
+Dependencies
+============
 
 * Python 2.4+
-* testtools
+* testtools <https://launchpad.net/testtools>
+
+  >>> import testtools
 
 
 Why TestScenarios
@@ -52,8 +54,20 @@ It is the intent of testscenarios to make dynamically running a single test
 in multiple scenarios clear, easy to debug and work with even when the list
 of scenarios is dynamically generated.
 
-Getting Scenarios applied:
-==========================
+
+Defining Scenarios
+==================
+
+A **scenario** is a tuple of a string name for the scenario, and a dict of
+parameters describing the scenario.  The name is appended to the test name, and
+the parameters are made available to the test instance when it's run.
+
+Scenarios are presented in **scenario lists** which are typically Python lists
+but may be any iterable.
+
+
+Getting Scenarios applied
+=========================
 
 At its heart the concept is simple. For a given test object with a list of
 scenarios we prepare a new test object for each scenario. This involves:
@@ -88,10 +102,20 @@ useful test base classes, or need to override run() or __call__ yourself) then
 you can cause scenario application to happen later by calling
 ``testscenarios.generate_scenarios()``. For instance::
 
-  >>> mytests = loader.loadTestsFromNames([...])
-  >>> test_suite = TestSuite()
+  >>> import unittest
+  >>> from testscenarios.scenarios import generate_scenarios
+
+This can work with loaders and runners from the standard library, or possibly other
+implementations::
+
+  >>> loader = unittest.TestLoader()
+  >>> test_suite = unittest.TestSuite()
+  >>> runner = unittest.TextTestRunner()
+
+  >>> mytests = loader.loadTestsFromNames(['example.test_sample'])
   >>> test_suite.addTests(generate_scenarios(mytests))
   >>> runner.run(test_suite)
+  <unittest._TextTestResult run=1 errors=0 failures=0>
 
 Testloaders
 +++++++++++
@@ -104,35 +128,37 @@ course, if you are using the subclassing approach this is already a surety).
 With ``load_tests``::
 
   >>> def load_tests(standard_tests, module, loader):
-  >>>     result = loader.suiteClass()
-  >>>     result.addTests(generate_scenarios(standard_tests))
-  >>>     return result
+  ...     result = loader.suiteClass()
+  ...     result.addTests(generate_scenarios(standard_tests))
+  ...     return result
 
 With ``test_suite``::
 
   >>> def test_suite():
-  >>>     loader = TestLoader()
-  >>>     tests = loader.loadTestsFromName(__name__)
-  >>>     result = loader.suiteClass()
-  >>>     result.addTests(generate_scenarios(tests))
-  >>>     return result
+  ...     loader = TestLoader()
+  ...     tests = loader.loadTestsFromName(__name__)
+  ...     result = loader.suiteClass()
+  ...     result.addTests(generate_scenarios(tests))
+  ...     return result
 
 
-Setting Scenarios for a test:
-=============================
+Setting Scenarios for a test
+============================
 
 A sample test using scenarios can be found in the doc/ folder.
 
-See ``pydoc testscenarios`` for details.
+See `pydoc testscenarios` for details.
 
 On the TestCase
 +++++++++++++++
 
 You can set a scenarios attribute on the test case::
 
-  >>> class MyTest(TestCase):
-  >>>
-  >>>     scenarios = [scenario1, scenario2, ...]
+  >>> class MyTest(unittest.TestCase):
+  ...
+  ...     scenarios = [
+  ...         ('scenario1', dict(param=1)),
+  ...         ('scenario2', dict(param=2)),]
 
 This provides the main interface by which scenarios are found for a given test.
 Subclasses will inherit the scenarios (unless they override the attribute).
@@ -145,22 +171,39 @@ not yet run. Simply replace (or alter, but be aware that many tests may share a
 single scenarios attribute) the scenarios attribute. For instance in this
 example some third party tests are extended to run with a custom scenario. ::
 
-  >>> for test in iterate_tests(stock_library_tests):
-  >>>     if isinstance(test, TestVFS):
-  >>>         test.scenarios = test.scenarios + [my_vfs_scenario]
-  >>> ...
+  >>> class TestTransport:
+  ...     """Hypothetical test case for bzrlib transport tests"""
+  ...     pass
+  ...
+  >>> stock_library_tests = unittest.TestLoader().loadTestsFromNames(
+  ...     ['example.test_sample'])
+  ...
+  >>> for test in testtools.iterate_tests(stock_library_tests):
+  ...     if isinstance(test, TestTransport):
+  ...         test.scenarios = test.scenarios + [my_vfs_scenario]
+  ...
+  >>> suite = unittest.TestSuite()
   >>> suite.addTests(generate_scenarios(stock_library_tests))
 
-Note that adding scenarios to a test that has already been parameterised via
-generate_scenarios generates a cross product::
+Generated tests don't have a ``scenarios`` list, because they don't normally
+require any more expansion.  However, you can add a ``scenarios`` list back on
+to them, and then run them through ``generate_scenarios`` again to generate the
+cross product of tests. ::
 
-  >>> class CrossProductDemo(TestCase):
-  >>>     scenarios = [scenario_0_0, scenario_0_1]
-  >>>     def test_foo(self):
-  >>>         return
+  >>> class CrossProductDemo(unittest.TestCase):
+  ...     scenarios = [('scenario_0_0', {}),
+  ...                  ('scenario_0_1', {})]
+  ...     def test_foo(self):
+  ...         return
+  ...
+  >>> suite = unittest.TestSuite()
   >>> suite.addTests(generate_scenarios(CrossProductDemo("test_foo")))
-  >>> for test in iterate_tests(suite):
-  >>>     test.scenarios = test.scenarios + [scenario_1_0, scenario_1_1]
+  >>> for test in testtools.iterate_tests(suite):
+  ...     test.scenarios = [
+  ...         ('scenario_1_0', {}), 
+  ...         ('scenario_1_1', {})]
+  ...
+  >>> suite2 = unittest.TestSuite()
   >>> suite2.addTests(generate_scenarios(suite))
   >>> print suite2.countTestCases()
   4
@@ -176,25 +219,25 @@ For instance::
 
   >>> hash_scenarios = []
   >>> try:
-  >>>     import md5
-  >>> except ImportError:
-  >>>     pass
-  >>> else:
-  >>>     hash_scenarios.append(("md5", "hash": md5.new))
+  ...     from hashlib import md5
+  ... except ImportError:
+  ...     pass
+  ... else:
+  ...     hash_scenarios.append(("md5", dict(hash=md5)))
   >>> try:
-  >>>     import sha1
-  >>> except ImportError:
-  >>>     pass
-  >>> else:
-  >>>     hash_scenarios.append(("sha1", "hash": sha1.new))
-  >>>
-  >>> class TestHashContract(TestCase):
-  >>>
-  >>>     scenarios = hash_scenarios
-  >>>
-  >>> class TestHashPerformance(TestCase):
-  >>>
-  >>>     scenarios = hash_scenarios
+  ...     from hashlib import sha1
+  ... except ImportError:
+  ...     pass
+  ... else:
+  ...     hash_scenarios.append(("sha1", dict(hash=sha1)))
+  ...
+  >>> class TestHashContract(unittest.TestCase):
+  ...
+  ...     scenarios = hash_scenarios
+  ...
+  >>> class TestHashPerformance(unittest.TestCase):
+  ...
+  ...     scenarios = hash_scenarios
 
 
 Forcing Scenarios
