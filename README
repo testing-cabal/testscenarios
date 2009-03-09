@@ -56,14 +56,16 @@ Getting Scenarios applied:
 
 At its heart the concept is simple. For a given test object with a list of
 scenarios we prepare a new test object for each scenario. This involves:
- * Clone the test to a new test with a new id uniquely distinguishing it.
- * Apply the scenario to the test by setting each key, value in the scenario
-   as attributes on the test object.
+
+* Clone the test to a new test with a new id uniquely distinguishing it.
+* Apply the scenario to the test by setting each key, value in the scenario
+  as attributes on the test object.
 
 There are some complicating factors around making this happen seamlessly. These
 factors are in two areas:
- * Choosing what scenarios to use. (See Setting Scenarios For A Test).
- * Getting the multiplication to happen. 
+
+* Choosing what scenarios to use. (See Setting Scenarios For A Test).
+* Getting the multiplication to happen. 
 
 Subclasssing
 ++++++++++++
@@ -84,6 +86,7 @@ TwistedTestCase, or TestCaseWithResources, or any one of a number of other
 useful test base classes, or need to override run() or __call__ yourself) then 
 you can cause scenario application to happen later by calling
 ``testscenarios.generate_scenarios()``. For instance::
+
   >>> mytests = loader.loadTestsFromNames([...])
   >>> test_suite = TestSuite()
   >>> test_suite.addTests(generate_scenarios(mytests))
@@ -119,7 +122,7 @@ Setting Scenarios for a test:
 
 A sample test using scenarios can be found in the doc/ folder.
 
-See pydoc testscenarios for details.
+See ``pydoc testscenarios`` for details.
 
 On the TestCase
 +++++++++++++++
@@ -139,7 +142,7 @@ After loading
 Test scenarios can also be generated arbitrarily later, as long as the test has
 not yet run. Simply replace (or alter, but be aware that many tests may share a
 single scenarios attribute) the scenarios attribute. For instance in this
-example some third party tests are extended to run with a custom scenario.
+example some third party tests are extended to run with a custom scenario. ::
 
   >>> for test in iterate_tests(stock_library_tests):
   >>>     if isinstance(test, TestVFS):
@@ -149,6 +152,7 @@ example some third party tests are extended to run with a custom scenario.
 
 Note that adding scenarios to a test that has already been parameterised via
 generate_scenarios generates a cross product::
+
   >>> class CrossProductDemo(TestCase):
   >>>     scenarios = [scenario_0_0, scenario_0_1]
   >>>     def test_foo(self):
@@ -168,6 +172,7 @@ and available libraries. An easy way to do this is to provide a global scope
 scenarios somewhere relevant to the tests that will use it, and then that can
 be customised, or dynamically populate your scenarios from a registry etc.
 For instance::
+
   >>> hash_scenarios = []
   >>> try:
   >>>     import md5
