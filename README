@@ -1,5 +1,6 @@
-testscenarios: extensions to python unittest to allow declarative
-dependency injection ('scenarios') by tests.
+*****************************************************************
+testscenarios: extensions to python unittest to support scenarios
+*****************************************************************
 
 Copyright (C) 2009  Robert Collins <robertc@robertcollins.net>
 
