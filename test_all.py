@@ -19,6 +19,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+import doctest
 import unittest
 import sys
 import os
@@ -77,7 +78,10 @@ def earlyStopFactory(*args, **kwargs):
 
 def test_suite():
     import testscenarios
-    return testscenarios.test_suite()
+    result = testscenarios.test_suite()
+    doctest.set_unittest_reportflags(doctest.REPORT_ONLY_FIRST_FAILURE)
+    result.addTest(doctest.DocFileSuite("README"))
+    return result
 
 
 def main(argv):

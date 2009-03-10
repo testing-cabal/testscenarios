@@ -1,9 +1,10 @@
 PYTHONPATH:=$(shell pwd)/lib:${PYTHONPATH}
+PYTHON ?= python
 
 all:
 
 check:
-	PYTHONPATH=$(PYTHONPATH) python ./test_all.py $(TESTRULE)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) ./test_all.py $(TESTRULE)
 
 clean:
 	find . -name '*.pyc' -print0 | xargs -0 rm -f

@@ -14,6 +14,11 @@ IN DEVELOPMENT
      README. 
      (Robert Collins)
 
+   * Make the README documentation doctest compatible, to be sure it works.
+     Also various presentation and language touchups. (Martin Pool)
+     (Adjusted to use doctest directly, and to not print the demo runners
+     output to stderror during make check - Robert Collins)
+
   IMPROVEMENTS:
 
   BUG FIXES:
