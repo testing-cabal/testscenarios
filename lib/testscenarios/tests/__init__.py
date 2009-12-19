@@ -17,6 +17,7 @@
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+import doctest
 import sys
 import unittest
 
@@ -39,4 +40,6 @@ def load_tests(standard_tests, module, loader):
     prefix = "testscenarios.tests.test_"
     test_mod_names = [prefix + test_module for test_module in test_modules]
     standard_tests.addTests(loader.loadTestsFromNames(test_mod_names))
+    doctest.set_unittest_reportflags(doctest.REPORT_ONLY_FIRST_FAILURE)
+    standard_tests.addTest(doctest.DocFileSuite("../../../README"))
     return standard_tests

@@ -4,7 +4,8 @@ PYTHON ?= python
 all:
 
 check:
-	PYTHONPATH=$(PYTHONPATH) $(PYTHON) ./test_all.py $(TESTRULE)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m testtools.run \
+	    testscenarios.test_suite
 
 clean:
 	find . -name '*.pyc' -print0 | xargs -0 rm -f
