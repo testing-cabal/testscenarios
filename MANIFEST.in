@@ -1,0 +1,8 @@
+include .bzrignore
+include COPYING
+include doc/*.py
+include GOALS
+include HACKING
+include NEWS
+include MANIFEST.in
+include Makefile
