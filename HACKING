@@ -19,8 +19,9 @@ Copyright
 
 Testscenarios is Copyright (C) 2009 Robert Collins. I'd like to be able to
 offer it up for stdlib inclusion once it has proved itself, so am asking for
-copyright assignment to me - or for your contributions to be under some GPL
-licence that is also compatible with the Python code contribution requirements.
+copyright assignment to me - or for your contributions to be under either the
+BSD or Apache-2.0 licences that Testscenarios are with (which permit inclusion
+in Python).
 
 Coding standards
 ++++++++++++++++
