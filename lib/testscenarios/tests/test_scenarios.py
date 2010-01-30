@@ -107,17 +107,30 @@ class TestGenerateScenarios(testtools.TestCase):
 
 class TestApplyScenario(testtools.TestCase):
 
-    def test_apply_scenario_sets_id_and_attributes(self):
+    def setUp(self):
+        super(TestApplyScenario, self).setUp()
+
+        self.scenario_name = 'demo'
+        self.scenario_attrs = {'foo': 'bar'}
+        self.scenario = (self.scenario_name, self.scenario_attrs)
+
         class ReferenceTest(unittest.TestCase):
             def test_pass(self):
                 pass
-        test = ReferenceTest("test_pass")
-        result = apply_scenario(('demo', {'foo': 'bar'}), test)
-        self.assertEqual(
-            'testscenarios.tests.test_scenarios.ReferenceTest.test_pass(demo)',
-            result.id())
-        self.assertEqual('bar', result.foo)
+        self.ReferenceTest = ReferenceTest
 
+    def test_sets_specified_id(self):
+        raw_test = self.ReferenceTest('test_pass')
+        raw_id = "testscenarios.tests.test_scenarios.ReferenceTest.test_pass"
+        scenario_name = self.scenario_name
+        expect_id = "%(raw_id)s(%(scenario_name)s)" % vars()
+        modified_test = apply_scenario(self.scenario, raw_test)
+        self.assertEqual(expect_id, modified_test.id())
+
+    def test_sets_specified_attributes(self):
+        raw_test = self.ReferenceTest('test_pass')
+        modified_test = apply_scenario(self.scenario, raw_test)
+        self.assertEqual('bar', modified_test.foo)
 
 class TestApplyScenarios(testtools.TestCase):
 
