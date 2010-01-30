@@ -38,8 +38,13 @@ def apply_scenario((name, parameters), test):
     :param test: The test to apply the scenario to. This test is unaltered.
     :return: A new test cloned from test, with the scenario applied.
     """
+    scenario_suffix = '(' + name + ')'
     newtest = clone_test_with_new_id(test,
-        test.id() + '(' + name + ')')
+        test.id() + scenario_suffix)
+    test_desc = test.shortDescription()
+    if test_desc is not None:
+        newtest_desc = "%(test_desc)s %(scenario_suffix)s" % vars()
+        newtest.shortDescription = (lambda: newtest_desc)
     for key, value in parameters.iteritems():
         setattr(newtest, key, value)
     return newtest
