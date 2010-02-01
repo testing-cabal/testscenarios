@@ -1,7 +1,7 @@
 PYTHONPATH:=$(shell pwd)/lib:${PYTHONPATH}
 PYTHON ?= python
 
-all:
+all: check
 
 check:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m testtools.run \

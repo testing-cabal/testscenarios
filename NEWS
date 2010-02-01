@@ -6,6 +6,13 @@ testscenarios release notes
 IN DEVELOPMENT
 ~~~~~~~~~~~~~~
 
+0.2
+~~~
+
+CHANGES:
+
+* Adjust the cloned tests ``shortDescription`` if one is present. (Ben Finney)
+
 0.1
 ~~~
 

@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name="testscenarios",
-      version="0.1",
+      version="0.2",
       description="Testscenarios, a pyunit extension for dependency injection",
       maintainer="Robert Collins",
       maintainer_email="robertc@robertcollins.net",
