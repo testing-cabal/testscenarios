@@ -22,6 +22,11 @@ __all__ = [
     'load_tests_apply_scenarios',
     ]
 
+
+from itertools import (
+    chain,
+    product,
+    )
 import unittest
 
 from testtools.testcase import clone_test_with_new_id
@@ -104,3 +109,23 @@ def load_tests_apply_scenarios(*params):
     result = loader.suiteClass()
     result.addTests(generate_scenarios(standard_tests))
     return result
+
+
+def multiply_scenarios(*scenarios):
+    """Multiply two or more iterables of scenarios.
+
+    It is safe to pass scenario generators or iterators.
+
+    :returns: A list of compound scenarios: the cross-product of all 
+        scenarios, with the names concatenated and the parameters
+        merged together.
+    """
+    r = []
+    scenario_lists = map(list, scenarios)
+    products = product(*scenario_lists)
+    for combo in products:
+        names, params = zip(*combo)
+        for p in params:
+            d.update(p.iteritems())
+        r.append((','.join(names), d))
+    return r

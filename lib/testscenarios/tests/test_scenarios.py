@@ -23,6 +23,7 @@ from testscenarios.scenarios import (
     apply_scenarios,
     generate_scenarios,
     load_tests_apply_scenarios,
+    multiply_scenarios,
     )
 import testtools
 from testtools.tests.helpers import LoggingResult
@@ -211,3 +212,32 @@ class TestLoadTests(testtools.TestCase):
             2,
             len(result_tests),
             result_tests)
+
+
+class TestMultiplyScenarios(testtools.TestCase):
+
+    def test_multiply_scenarios(self):
+        def s(name):
+            for i in 'ab':
+                yield i, {name: i}
+        r = list(multiply_scenarios(s('p'), s('q')))
+        self.assertEquals([
+            ('a,a', dict(p='a', q='a')),
+            ('a,b', dict(p='a', q='b')),
+            ('b,a', dict(p='b', q='a')),
+            ('b,b', dict(p='b', q='b')),
+            ],
+            r)
+
+    def test_multiply_many_scenarios(self):
+        def s(name):
+            for i in 'abc':
+                yield i, {name: i}
+        r = list(multiply_scenarios(s('p'), s('q'), s('r'), s('t')))
+        self.assertEqual(
+            3**4,
+            len(r),
+            r)
+        self.assertEqual(
+            'a,a,a,a',
+            r[0][0])

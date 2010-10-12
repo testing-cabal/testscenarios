@@ -267,3 +267,16 @@ Advice on Writing Scenarios
 
 If a parameterised test is because of a bug run without being parameterized,
 it should fail rather than running with defaults, because this can hide bugs.
+
+
+Producing Scenarios
+===================
+
+The `multiply_scenarios` function produces the cross-product of the scenarios
+passed in::
+
+    scenarios = multiply_scenarios(
+	vary_by_http_client(),
+	vary_by_http_protocol_version(),
+	)
+  
