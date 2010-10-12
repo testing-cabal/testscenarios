@@ -128,6 +128,19 @@ With ``load_tests``::
   ...     result.addTests(generate_scenarios(standard_tests))
   ...     return result
 
+as a convenience, this is available in ``load_tests_apply_scenarios``, so a
+module using scenario tests need only say ::
+
+    from testscenarios import load_tests_apply_scenarios
+
+    load_tests = load_tests_apply_scenarios
+
+It's suggested for clarity this be done near the top of the file.
+
+Python 2.7 and greater support a different calling convention for `load_tests``
+<https://bugs.launchpad.net/bzr/+bug/607412>.  `load_tests_apply_scenarios`
+copes with both.
+
 With ``test_suite``::
 
   >>> def test_suite():

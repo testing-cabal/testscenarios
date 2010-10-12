@@ -2,6 +2,7 @@
 #  dependency injection ('scenarios') by tests.
 #
 # Copyright (c) 2009, Robert Collins <robertc@robertcollins.net>
+# Copyright (c) 2010 Martin Pool <mbp@sourcefrog.net>
 # 
 # Licensed under either the Apache License, Version 2.0 or the BSD 3-clause
 # license at the users choice. A copy of both licenses are available in the
@@ -21,6 +22,7 @@ from testscenarios.scenarios import (
     apply_scenario,
     apply_scenarios,
     generate_scenarios,
+    load_tests_apply_scenarios,
     )
 import testtools
 from testtools.tests.helpers import LoggingResult
@@ -171,3 +173,24 @@ class TestApplyScenarios(testtools.TestCase):
         tests = list(apply_scenarios(ReferenceTest.scenarios, test))
         self.assertEqual([('demo', {})], ReferenceTest.scenarios)
         self.assertEqual(ReferenceTest.scenarios, tests[0].scenarios)
+
+
+class TestLoadTests(testtools.TestCase):
+
+    def test_load_tests_apply_scenarios(self):
+        class SampleTest(unittest.TestCase):
+            def test_nothing(self): 
+                pass
+            scenarios = [
+                ('a', {}),
+                ('b', {}),
+                ]
+        suite = load_tests_apply_scenarios(
+            unittest.TestLoader(),
+            [SampleTest('test_nothing')],
+            None)
+        result_tests = list(testtools.iterate_tests(suite))
+        self.assertEquals(
+            2,
+            len(result_tests),
+            result_tests)

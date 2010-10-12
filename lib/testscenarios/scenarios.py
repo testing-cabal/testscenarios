@@ -2,6 +2,7 @@
 #  dependency injection ('scenarios') by tests.
 #
 # Copyright (c) 2009, Robert Collins <robertc@robertcollins.net>
+# Copyright (c) 2010 Martin Pool <mbp@sourcefrog.net>
 # 
 # Licensed under either the Apache License, Version 2.0 or the BSD 3-clause
 # license at the users choice. A copy of both licenses are available in the
@@ -18,6 +19,7 @@ __all__ = [
     'apply_scenario',
     'apply_scenarios',
     'generate_scenarios',
+    'load_tests_apply_scenarios',
     ]
 
 import unittest
@@ -76,3 +78,25 @@ def generate_scenarios(test_or_suite):
                 yield newtest
         else:
             yield test
+
+
+def load_tests_apply_scenarios(loader, standard_tests, pattern):
+    """Multiply out all tests in a module that have scenarios.
+
+    If this is referenced by the `load_tests` attribute of a module, then
+    Python2.7 or other testloaders that implement this protocol will
+    automatically arrange for the scenarios to be expanded.  In this case it
+    is not necessary (or desirable) to subclass TestWithScenarios.
+
+    Note that this function implements the protocol used by Python2.7 
+    <http://docs.python.org/library/unittest.html#load-tests-protocol> which
+    is different from the `load_tests` method originally used in bzr 
+    and some other projects <http://pad.lv/607412>.
+
+    :param loader: A TestLoader.
+    :param standard_test: The test objects found in this module before 
+        multiplication.
+    """
+    result = loader.suiteClass()
+    result.addTests(generate_scenarios(standard_tests))
+    return result
