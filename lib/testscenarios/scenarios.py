@@ -80,23 +80,27 @@ def generate_scenarios(test_or_suite):
             yield test
 
 
-def load_tests_apply_scenarios(loader, standard_tests, pattern):
+def load_tests_apply_scenarios(*params):
     """Multiply out all tests in a module that have scenarios.
 
     If this is referenced by the `load_tests` attribute of a module, then
-    Python2.7 or other testloaders that implement this protocol will
-    automatically arrange for the scenarios to be expanded.  In this case it
-    is not necessary (or desirable) to subclass TestWithScenarios.
+    testloaders that implement this protocol will automatically arrange for
+    the scenarios to be expanded.  In this case it is not necessary (or
+    desirable) to subclass TestWithScenarios.
 
-    Note that this function implements the protocol used by Python2.7 
-    <http://docs.python.org/library/unittest.html#load-tests-protocol> which
-    is different from the `load_tests` method originally used in bzr 
-    and some other projects <http://pad.lv/607412>.
+    Two different calling conventions for load_tests have been used, and this
+    function should support both.  Python 2.7 passes (loader, standard_tests,
+    pattern), and bzr, nose and others have used (standard_tests,
+    module, loader).  See <http://pad.lv/607412>.
 
     :param loader: A TestLoader.
     :param standard_test: The test objects found in this module before 
         multiplication.
     """
+    if getattr(params[0], 'suiteClass', None) is not None:
+        loader, standard_tests, pattern = params
+    else:
+        standard_tests, module, loader = params
     result = loader.suiteClass()
     result.addTests(generate_scenarios(standard_tests))
     return result
