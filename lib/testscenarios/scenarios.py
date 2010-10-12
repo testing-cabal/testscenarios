@@ -2,6 +2,7 @@
 #  dependency injection ('scenarios') by tests.
 #
 # Copyright (c) 2009, Robert Collins <robertc@robertcollins.net>
+# Copyright (c) 2010 Martin Pool <mbp@sourcefrog.net>
 # 
 # Licensed under either the Apache License, Version 2.0 or the BSD 3-clause
 # license at the users choice. A copy of both licenses are available in the
@@ -18,8 +19,14 @@ __all__ = [
     'apply_scenario',
     'apply_scenarios',
     'generate_scenarios',
+    'load_tests_apply_scenarios',
+    'multiply_scenarios',
     ]
 
+from itertools import (
+    chain,
+    product,
+    )
 import unittest
 
 from testtools.testcase import clone_test_with_new_id
@@ -76,3 +83,49 @@ def generate_scenarios(test_or_suite):
                 yield newtest
         else:
             yield test
+
+
+def load_tests_apply_scenarios(*params):
+    """Adapter test runner load hooks to call generate_scenarios.
+
+    If this is referenced by the `load_tests` attribute of a module, then
+    testloaders that implement this protocol will automatically arrange for
+    the scenarios to be expanded. This can be used instead of using
+    TestWithScenarios.
+
+    Two different calling conventions for load_tests have been used, and this
+    function should support both. Python 2.7 passes (loader, standard_tests,
+    pattern), and bzr used (standard_tests, module, loader).
+
+    :param loader: A TestLoader.
+    :param standard_test: The test objects found in this module before 
+        multiplication.
+    """
+    if getattr(params[0], 'suiteClass', None) is not None:
+        loader, standard_tests, pattern = params
+    else:
+        standard_tests, module, loader = params
+    result = loader.suiteClass()
+    result.addTests(generate_scenarios(standard_tests))
+    return result
+
+
+def multiply_scenarios(*scenarios):
+    """Multiply two or more iterables of scenarios.
+
+    It is safe to pass scenario generators or iterators.
+
+    :returns: A list of compound scenarios: the cross-product of all 
+        scenarios, with the names concatenated and the parameters
+        merged together.
+    """
+    result = []
+    scenario_lists = map(list, scenarios)
+    for combination in product(*scenario_lists):
+        names, parameters = zip(*combination)
+        scenario_name = ','.join(names)
+        scenario_parameters = {}
+        for parameter in parameters:
+            scenario_parameters.update(parameter)
+        result.append((scenario_name, scenario_parameters))
+    return result

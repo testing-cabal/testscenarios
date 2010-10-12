@@ -45,12 +45,19 @@ __all__ = [
     'apply_scenario',
     'apply_scenarios',
     'generate_scenarios',
+    'load_tests_apply_scenarios',
+    'multiply_scenarios',
     ]
 
 
 import unittest
 
-from testscenarios.scenarios import apply_scenario, generate_scenarios
+from testscenarios.scenarios import (
+    apply_scenario,
+    generate_scenarios,
+    load_tests_apply_scenarios,
+    multiply_scenarios,
+    )
 from testscenarios.testcase import TestWithScenarios
 
 

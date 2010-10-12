@@ -13,6 +13,9 @@ CHANGES:
 
 * Adjust the cloned tests ``shortDescription`` if one is present. (Ben Finney)
 
+* Provide a load_tests implementation for easy use, and multiply_scenarios to
+  create the cross product of scenarios. (Martin Pool)
+
 0.1
 ~~~
 

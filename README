@@ -128,6 +128,15 @@ With ``load_tests``::
   ...     result.addTests(generate_scenarios(standard_tests))
   ...     return result
 
+as a convenience, this is available in ``load_tests_apply_scenarios``, so a
+module using scenario tests need only say ::
+
+  >>> from testscenarios import load_tests_apply_scenarios as load_tests
+
+Python 2.7 and greater support a different calling convention for `load_tests``
+<https://bugs.launchpad.net/bzr/+bug/607412>.  `load_tests_apply_scenarios`
+copes with both.
+
 With ``test_suite``::
 
   >>> def test_suite():
@@ -254,3 +263,20 @@ Advice on Writing Scenarios
 
 If a parameterised test is because of a bug run without being parameterized,
 it should fail rather than running with defaults, because this can hide bugs.
+
+
+Producing Scenarios
+===================
+
+The `multiply_scenarios` function produces the cross-product of the scenarios
+passed in::
+
+  >>> from testscenarios.scenarios import multiply_scenarios
+  >>> 
+  >>> scenarios = multiply_scenarios(
+  ...      [('scenario1', dict(param1=1)), ('scenario2', dict(param1=2))],
+  ...      [('scenario2', dict(param2=1))],
+  ...      )
+  >>> scenarios == [('scenario1,scenario2', {'param2': 1, 'param1': 1}),
+  ...               ('scenario2,scenario2', {'param2': 1, 'param1': 2})]
+  True
