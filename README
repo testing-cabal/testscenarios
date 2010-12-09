@@ -258,6 +258,35 @@ allowing it to be used to layer scenarios without affecting existing scenario
 selection.
 
 
+Generating Scenarios
+====================
+
+Some functions (currently one :-) are available to ease generation of scenario
+lists for common situations.
+
+Testing Per Implementation Module
++++++++++++++++++++++++++++++++++
+
+It is reasonably common to have multiple Python modules that provide the same
+capabilities and interface, and to want apply the same tests to all of them.
+
+In some cases, not all of the statically defined implementations will be able
+to be used in a particular testing environment.  For example, there may be both
+a C and a pure-Python implementation of a module.  You want to test the C
+module if it can be loaded, but also to have the tests pass if the C module has
+not been compiled.
+
+The ``per_module_scenarios`` function generates a scenario for each named
+module, omitting those that raise an ``ImportError``.  For each test object,
+the implementation to be tested is installed into a given attribute.
+
+Note that for the test to be valid, all access to the module under test must go
+through the relevant attribute of the test object.  If one of the
+implementations is also directly imported by the test module or any other,
+testscenarios will not magically stop it being used.
+
+
+
 Advice on Writing Scenarios
 ===========================
 

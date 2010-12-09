@@ -2,7 +2,7 @@
 #  dependency injection ('scenarios') by tests.
 #
 # Copyright (c) 2009, Robert Collins <robertc@robertcollins.net>
-# Copyright (c) 2010 Martin Pool <mbp@sourcefrog.net>
+# Copyright (c) 2010, 2011 Martin Pool <mbp@sourcefrog.net>
 # 
 # Licensed under either the Apache License, Version 2.0 or the BSD 3-clause
 # license at the users choice. A copy of both licenses are available in the
@@ -239,3 +239,19 @@ class TestMultiplyScenarios(testtools.TestCase):
         self.assertEqual(
             'a,a,a,a',
             scenarios[0][0])
+
+
+class TestPerModuleScenarios(testtools.TestCase):
+
+    def test_per_module_scenarios(self):
+        """Generate scenarios for available modules"""
+        s = testscenarios.scenarios.per_module_scenarios(
+            'the_module', [
+                ('Python', 'testscenarios'),
+                ('unittest', 'unittest'),
+                ('nonexistent', 'nonexistent'),
+                ])
+        self.assertEqual(s, [
+            ('Python', {'the_module': testscenarios}),
+            ('unittest', {'the_module': unittest}),
+            ])

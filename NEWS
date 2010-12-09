@@ -9,6 +9,12 @@ IN DEVELOPMENT
 0.2
 ~~~
 
+NEW FEATURES:
+
+* New function ``per_module_scenarios`` for tests that should be applied across 
+  multiple modules providing the same interface, some of which may not be 
+  available at run time.  (Martin Pool)
+
 CHANGES:
 
 * Adjust the cloned tests ``shortDescription`` if one is present. (Ben Finney)
