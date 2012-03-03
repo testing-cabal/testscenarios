@@ -42,6 +42,7 @@ __version__ = (0, 2, 0, 'final', 0)
 
 __all__ = [
     'TestWithScenarios',
+    'MixableTestWithScenarios',
     'apply_scenario',
     'apply_scenarios',
     'generate_scenarios',
@@ -58,7 +59,7 @@ from testscenarios.scenarios import (
     load_tests_apply_scenarios,
     multiply_scenarios,
     )
-from testscenarios.testcase import TestWithScenarios
+from testscenarios.testcase import TestWithScenarios, MixableTestWithScenarios
 
 
 def test_suite():

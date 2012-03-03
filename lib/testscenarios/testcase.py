@@ -24,7 +24,7 @@ from testtools.testcase import clone_test_with_new_id
 
 from testscenarios.scenarios import generate_scenarios
 
-class TestWithScenarios(unittest.TestCase):
+class MixableTestWithScenarios(object):
     """A TestCase with support for scenarios via a scenarios attribute.
     
     When a test object which is an instance of TestWithScenarios is run,
@@ -50,7 +50,7 @@ class TestWithScenarios(unittest.TestCase):
             for test in generate_scenarios(self):
                 test.debug()
         else:
-            return super(TestWithScenarios, self).debug()
+            return super(MixableTestWithScenarios, self).debug()
 
     def run(self, result=None):
         scenarios = self._get_scenarios()
@@ -59,4 +59,7 @@ class TestWithScenarios(unittest.TestCase):
                 test.run(result)
             return
         else:
-            return super(TestWithScenarios, self).run(result)
+            return super(MixableTestWithScenarios, self).run(result)
+
+class TestWithScenarios(MixableTestWithScenarios, unittest.TestCase):
+    pass
