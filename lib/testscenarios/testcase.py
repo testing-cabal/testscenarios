@@ -16,6 +16,7 @@
 
 __all__ = [
     'TestWithScenarios',
+    'WithScenarios',
     ]
 
 import unittest
@@ -24,15 +25,17 @@ from testtools.testcase import clone_test_with_new_id
 
 from testscenarios.scenarios import generate_scenarios
 
-class TestWithScenarios(unittest.TestCase):
-    """A TestCase with support for scenarios via a scenarios attribute.
-    
-    When a test object which is an instance of TestWithScenarios is run,
-    and there is a non-empty scenarios attribute on the object, the test is
-    multiplied by the run method into one test per scenario. For this to work
-    reliably the TestWithScenarios.run method must not be overriden in a
-    subclass (or overridden compatibly with TestWithScenarios).
+_doc = """
+    When a test object which inherits from WithScenarios is run, and there is a
+    non-empty scenarios attribute on the object, the test is multiplied by the
+    run method into one test per scenario. For this to work reliably the
+    WithScenarios.run method must not be overriden in a subclass (or overridden
+    compatibly with WithScenarios).
     """
+
+class WithScenarios(object):
+    __doc__ = """A mixin for TestCase with support for declarative scenarios.
+    """ + _doc
 
     def _get_scenarios(self):
         return getattr(self, 'scenarios', None)
@@ -50,7 +53,7 @@ class TestWithScenarios(unittest.TestCase):
             for test in generate_scenarios(self):
                 test.debug()
         else:
-            return super(TestWithScenarios, self).debug()
+            return super(WithScenarios, self).debug()
 
     def run(self, result=None):
         scenarios = self._get_scenarios()
@@ -59,4 +62,9 @@ class TestWithScenarios(unittest.TestCase):
                 test.run(result)
             return
         else:
-            return super(TestWithScenarios, self).run(result)
+            return super(WithScenarios, self).run(result)
+
+
+class TestWithScenarios(WithScenarios, unittest.TestCase):
+    __doc__ = """Unittest TestCase with support for declarative scenarios.
+    """ + _doc

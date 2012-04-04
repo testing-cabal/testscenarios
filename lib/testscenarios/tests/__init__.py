@@ -40,4 +40,4 @@ def load_tests(standard_tests, module, loader):
     doctest.set_unittest_reportflags(doctest.REPORT_ONLY_FIRST_FAILURE)
     standard_tests.addTest(
         doctest.DocFileSuite("../../../README", optionflags=doctest.ELLIPSIS))
-    return standard_tests
+    return loader.suiteClass(testscenarios.generate_scenarios(standard_tests))

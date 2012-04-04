@@ -17,13 +17,25 @@
 import unittest
 
 import testscenarios
+import testtools
 from testtools.tests.helpers import LoggingResult
 
 
-class TestTestWithScenarios(unittest.TestCase):
+class TestTestWithScenarios(testtools.TestCase):
+
+    scenarios = testscenarios.scenarios.per_module_scenarios(
+        'impl', (('unittest', 'unittest'), ('unittest2', 'unittest2')))
+
+    @property
+    def Implementation(self):
+        if isinstance(self.impl, tuple):
+            self.skipTest('import failed - module not installed?')
+        class Implementation(testscenarios.WithScenarios, self.impl.TestCase):
+            pass
+        return Implementation
 
     def test_no_scenarios_no_error(self):
-        class ReferenceTest(testscenarios.TestWithScenarios):
+        class ReferenceTest(self.Implementation):
             def test_pass(self):
                 pass
         test = ReferenceTest("test_pass")
@@ -33,7 +45,7 @@ class TestTestWithScenarios(unittest.TestCase):
         self.assertEqual(1, result.testsRun)
 
     def test_with_one_scenario_one_run(self):
-        class ReferenceTest(testscenarios.TestWithScenarios):
+        class ReferenceTest(self.Implementation):
             scenarios = [('demo', {})]
             def test_pass(self):
                 pass
@@ -48,7 +60,7 @@ class TestTestWithScenarios(unittest.TestCase):
             log[0][1].id())
 
     def test_with_two_scenarios_two_run(self):
-        class ReferenceTest(testscenarios.TestWithScenarios):
+        class ReferenceTest(self.Implementation):
             scenarios = [('1', {}), ('2', {})]
             def test_pass(self):
                 pass
@@ -66,7 +78,7 @@ class TestTestWithScenarios(unittest.TestCase):
             log[4][1].id())
 
     def test_attributes_set(self):
-        class ReferenceTest(testscenarios.TestWithScenarios):
+        class ReferenceTest(self.Implementation):
             scenarios = [
                 ('1', {'foo': 1, 'bar': 2}),
                 ('2', {'foo': 2, 'bar': 4})]
@@ -80,7 +92,7 @@ class TestTestWithScenarios(unittest.TestCase):
         self.assertEqual(2, result.testsRun)
 
     def test_scenarios_attribute_cleared(self):
-        class ReferenceTest(testscenarios.TestWithScenarios):
+        class ReferenceTest(self.Implementation):
             scenarios = [
                 ('1', {'foo': 1, 'bar': 2}),
                 ('2', {'foo': 2, 'bar': 4})]
@@ -97,14 +109,14 @@ class TestTestWithScenarios(unittest.TestCase):
         self.assertEqual(None, log[4][1].scenarios)
 
     def test_countTestCases_no_scenarios(self):
-        class ReferenceTest(testscenarios.TestWithScenarios):
+        class ReferenceTest(self.Implementation):
             def test_check_foo(self):
                 pass
         test = ReferenceTest("test_check_foo")
         self.assertEqual(1, test.countTestCases())
 
     def test_countTestCases_empty_scenarios(self):
-        class ReferenceTest(testscenarios.TestWithScenarios):
+        class ReferenceTest(self.Implementation):
             scenarios = []
             def test_check_foo(self):
                 pass
@@ -112,7 +124,7 @@ class TestTestWithScenarios(unittest.TestCase):
         self.assertEqual(1, test.countTestCases())
 
     def test_countTestCases_1_scenarios(self):
-        class ReferenceTest(testscenarios.TestWithScenarios):
+        class ReferenceTest(self.Implementation):
             scenarios = [('1', {'foo': 1, 'bar': 2})]
             def test_check_foo(self):
                 pass
@@ -120,7 +132,7 @@ class TestTestWithScenarios(unittest.TestCase):
         self.assertEqual(1, test.countTestCases())
 
     def test_countTestCases_2_scenarios(self):
-        class ReferenceTest(testscenarios.TestWithScenarios):
+        class ReferenceTest(self.Implementation):
             scenarios = [
                 ('1', {'foo': 1, 'bar': 2}),
                 ('2', {'foo': 2, 'bar': 4})]
@@ -131,7 +143,7 @@ class TestTestWithScenarios(unittest.TestCase):
 
     def test_debug_2_scenarios(self):
         log = []
-        class ReferenceTest(testscenarios.TestWithScenarios):
+        class ReferenceTest(self.Implementation):
             scenarios = [
                 ('1', {'foo': 1, 'bar': 2}),
                 ('2', {'foo': 2, 'bar': 4})]

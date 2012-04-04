@@ -22,6 +22,10 @@ CHANGES:
 * Provide a load_tests implementation for easy use, and multiply_scenarios to
   create the cross product of scenarios. (Martin Pool)
 
+* ``TestWithScenarios`` is now backed by a mixin - WithScenarios - which can be
+  mixed into different unittest implementations more cleanly (e.g. unittest2).
+  (James Polley, Robert Collins)
+
 0.1
 ~~~
 
