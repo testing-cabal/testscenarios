@@ -6,14 +6,21 @@ testscenarios release notes
 IN DEVELOPMENT
 ~~~~~~~~~~~~~~
 
-0.2
+0.3
 ~~~
 
-NEW FEATURES:
+CHANGES:
 
 * New function ``per_module_scenarios`` for tests that should be applied across 
   multiple modules providing the same interface, some of which may not be 
   available at run time.  (Martin Pool)
+
+* ``TestWithScenarios`` is now backed by a mixin - WithScenarios - which can be
+  mixed into different unittest implementations more cleanly (e.g. unittest2).
+  (James Polley, Robert Collins)
+
+0.2
+~~~
 
 CHANGES:
 
@@ -21,10 +28,6 @@ CHANGES:
 
 * Provide a load_tests implementation for easy use, and multiply_scenarios to
   create the cross product of scenarios. (Martin Pool)
-
-* ``TestWithScenarios`` is now backed by a mixin - WithScenarios - which can be
-  mixed into different unittest implementations more cleanly (e.g. unittest2).
-  (James Polley, Robert Collins)
 
 0.1
 ~~~

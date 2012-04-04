@@ -6,7 +6,7 @@ import os.path
 description = file(os.path.join(os.path.dirname(__file__), 'README'), 'rb').read()
 
 setup(name="testscenarios",
-      version="0.2",
+      version="0.3",
       description="Testscenarios, a pyunit extension for dependency injection",
       long_description=description,
       maintainer="Robert Collins",
