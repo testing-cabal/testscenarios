@@ -38,5 +38,6 @@ def load_tests(standard_tests, module, loader):
     test_mod_names = [prefix + test_module for test_module in test_modules]
     standard_tests.addTests(loader.loadTestsFromNames(test_mod_names))
     doctest.set_unittest_reportflags(doctest.REPORT_ONLY_FIRST_FAILURE)
-    standard_tests.addTest(doctest.DocFileSuite("../../../README"))
+    standard_tests.addTest(
+        doctest.DocFileSuite("../../../README", optionflags=doctest.ELLIPSIS))
     return standard_tests

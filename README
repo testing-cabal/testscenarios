@@ -111,7 +111,7 @@ implementations::
   >>> mytests = loader.loadTestsFromNames(['doc.test_sample'])
   >>> test_suite.addTests(generate_scenarios(mytests))
   >>> runner.run(test_suite)
-  <unittest._TextTestResult run=1 errors=0 failures=0>
+  <unittest...TextTestResult run=1 errors=0 failures=0>
 
 Testloaders
 +++++++++++
@@ -256,6 +256,37 @@ introspecting the test object to determine the scenarios. The
 ``apply_scenarios`` function does not reset the test scenarios attribute,
 allowing it to be used to layer scenarios without affecting existing scenario
 selection.
+
+
+Generating Scenarios
+====================
+
+Some functions (currently one :-) are available to ease generation of scenario
+lists for common situations.
+
+Testing Per Implementation Module
++++++++++++++++++++++++++++++++++
+
+It is reasonably common to have multiple Python modules that provide the same
+capabilities and interface, and to want apply the same tests to all of them.
+
+In some cases, not all of the statically defined implementations will be able
+to be used in a particular testing environment.  For example, there may be both
+a C and a pure-Python implementation of a module.  You want to test the C
+module if it can be loaded, but also to have the tests pass if the C module has
+not been compiled.
+
+The ``per_module_scenarios`` function generates a scenario for each named
+module. The module object of the imported module is set in the supplied
+attribute name of the resulting scenario.
+Modules which raise ``ImportError`` during import will have the
+``sys.exc_info()`` of the exception set instead of the module object. Tests
+can check for the attribute being a tuple to decide what to do (e.g. to skip).
+
+Note that for the test to be valid, all access to the module under test must go
+through the relevant attribute of the test object.  If one of the
+implementations is also directly imported by the test module or any other,
+testscenarios will not magically stop it being used.
 
 
 Advice on Writing Scenarios
