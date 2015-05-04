@@ -6,10 +6,19 @@ testscenarios release notes
 IN DEVELOPMENT
 ~~~~~~~~~~~~~~
 
+0.4
+~~~
+
+IMPROVEMENTS
+------------
+
+* Python 3.2 support added. (Robert Collins)
+
 0.3
 ~~~
 
-CHANGES:
+CHANGES
+-------
 
 * New function ``per_module_scenarios`` for tests that should be applied across 
   multiple modules providing the same interface, some of which may not be 
@@ -22,7 +31,8 @@ CHANGES:
 0.2
 ~~~
 
-CHANGES:
+CHANGES
+-------
 
 * Adjust the cloned tests ``shortDescription`` if one is present. (Ben Finney)
 
@@ -32,7 +42,8 @@ CHANGES:
 0.1
 ~~~
 
-CHANGES:
+CHANGES
+-------
 
 * Created project. The primary interfaces are
   ``testscenarios.TestWithScenarios`` and
@@ -43,11 +54,3 @@ CHANGES:
   Also various presentation and language touchups. (Martin Pool)
   (Adjusted to use doctest directly, and to not print the demo runners
   output to stderror during make check - Robert Collins)
-
-IMPROVEMENTS:
-
-BUG FIXES:
-
-API CHANGES:
-
-INTERNALS:

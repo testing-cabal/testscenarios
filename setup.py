@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+from setuptools import setup
 import os.path
 
-description = file(os.path.join(os.path.dirname(__file__), 'README'), 'rb').read()
+description = open(os.path.join(os.path.dirname(__file__), 'README'), 'rt').read()
 
 setup(name="testscenarios",
-      version="0.3",
+      version="0.4",
       description="Testscenarios, a pyunit extension for dependency injection",
       long_description=description,
       maintainer="Robert Collins",
@@ -21,7 +21,11 @@ setup(name="testscenarios",
           'License :: OSI Approved :: Apache Software License',
           'Operating System :: OS Independent',
           'Programming Language :: Python',
+          'Programming Language :: Python :: 3',
           'Topic :: Software Development :: Quality Assurance',
           'Topic :: Software Development :: Testing',
           ],
+      install_requires = [
+        'testtools',
+        ]
       )

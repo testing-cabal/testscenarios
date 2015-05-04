@@ -98,7 +98,10 @@ you can cause scenario application to happen later by calling
 ``testscenarios.generate_scenarios()``. For instance::
 
   >>> import unittest
-  >>> import StringIO
+  >>> try:
+  ...     from StringIO import StringIO
+  ... except ImportError:
+  ...     from io import StringIO
   >>> from testscenarios.scenarios import generate_scenarios
 
 This can work with loaders and runners from the standard library, or possibly other
@@ -106,7 +109,7 @@ implementations::
 
   >>> loader = unittest.TestLoader()
   >>> test_suite = unittest.TestSuite()
-  >>> runner = unittest.TextTestRunner(stream=StringIO.StringIO())
+  >>> runner = unittest.TextTestRunner(stream=StringIO())
 
   >>> mytests = loader.loadTestsFromNames(['doc.test_sample'])
   >>> test_suite.addTests(generate_scenarios(mytests))
@@ -211,7 +214,7 @@ cross product of tests. ::
   ...
   >>> suite2 = unittest.TestSuite()
   >>> suite2.addTests(generate_scenarios(suite))
-  >>> print suite2.countTestCases()
+  >>> print(suite2.countTestCases())
   4
 
 Dynamic Scenarios

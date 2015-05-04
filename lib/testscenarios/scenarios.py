@@ -34,7 +34,7 @@ from testtools.testcase import clone_test_with_new_id
 from testtools import iterate_tests
 
 
-def apply_scenario((name, parameters), test):
+def apply_scenario(scenario, test):
     """Apply scenario to test.
 
     :param scenario: A tuple (name, parameters) to apply to the test. The test
@@ -43,6 +43,7 @@ def apply_scenario((name, parameters), test):
     :param test: The test to apply the scenario to. This test is unaltered.
     :return: A new test cloned from test, with the scenario applied.
     """
+    name, parameters = scenario
     scenario_suffix = '(' + name + ')'
     newtest = clone_test_with_new_id(test,
         test.id() + scenario_suffix)
@@ -50,7 +51,7 @@ def apply_scenario((name, parameters), test):
     if test_desc is not None:
         newtest_desc = "%(test_desc)s %(scenario_suffix)s" % vars()
         newtest.shortDescription = (lambda: newtest_desc)
-    for key, value in parameters.iteritems():
+    for key, value in parameters.items():
         setattr(newtest, key, value)
     return newtest
 
