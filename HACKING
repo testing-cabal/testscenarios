@@ -35,5 +35,5 @@ the testscenarios __init__.py.
 Releases
 ++++++++
 
-Commit, tag with a signed tag, make release to build and push to pypi. push to
-github.
+Commit a version to NEWS, tag with a signed tag, make release to build and push
+to pypi. push to github.
