@@ -16,10 +16,11 @@
 
 import unittest
 
-import testscenarios
 import testtools
+from testtools.matchers import EndsWith
 from testtools.tests.helpers import LoggingResult
 
+import testscenarios
 
 class TestTestWithScenarios(testtools.TestCase):
 
@@ -55,9 +56,8 @@ class TestTestWithScenarios(testtools.TestCase):
         test.run(result)
         self.assertTrue(result.wasSuccessful())
         self.assertEqual(1, result.testsRun)
-        self.assertEqual(
-            'testscenarios.tests.test_testcase.ReferenceTest.test_pass(demo)',
-            log[0][1].id())
+        self.expectThat(
+            log[0][1].id(), EndsWith('ReferenceTest.test_pass(demo)'))
 
     def test_with_two_scenarios_two_run(self):
         class ReferenceTest(self.Implementation):
@@ -70,12 +70,10 @@ class TestTestWithScenarios(testtools.TestCase):
         test.run(result)
         self.assertTrue(result.wasSuccessful())
         self.assertEqual(2, result.testsRun)
-        self.assertEqual(
-            'testscenarios.tests.test_testcase.ReferenceTest.test_pass(1)',
-            log[0][1].id())
-        self.assertEqual(
-            'testscenarios.tests.test_testcase.ReferenceTest.test_pass(2)',
-            log[4][1].id())
+        self.expectThat(
+            log[0][1].id(), EndsWith('ReferenceTest.test_pass(1)'))
+        self.expectThat(
+            log[4][1].id(), EndsWith('ReferenceTest.test_pass(2)'))
 
     def test_attributes_set(self):
         class ReferenceTest(self.Implementation):

@@ -6,6 +6,11 @@ testscenarios release notes
 IN DEVELOPMENT
 ~~~~~~~~~~~~~~
 
+CHANGES
+-------
+
+* Tests fixed for Python 3.3, 3.4, 3.5. (Robert Collins)
+
 0.4
 ~~~
 

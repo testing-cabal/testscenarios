@@ -17,6 +17,11 @@
 
 import unittest
 
+import testtools
+from testtools.matchers import EndsWith
+
+from testtools.tests.helpers import LoggingResult
+
 import testscenarios
 from testscenarios.scenarios import (
     apply_scenario,
@@ -25,8 +30,6 @@ from testscenarios.scenarios import (
     load_tests_apply_scenarios,
     multiply_scenarios,
     )
-import testtools
-from testtools.tests.helpers import LoggingResult
 
 
 class TestGenerateScenarios(testtools.TestCase):
@@ -58,9 +61,8 @@ class TestGenerateScenarios(testtools.TestCase):
         test = ReferenceTest("test_pass")
         log = self.hook_apply_scenarios()
         tests = list(generate_scenarios(test))
-        self.assertEqual(
-            'testscenarios.tests.test_scenarios.ReferenceTest.test_pass(demo)',
-            tests[0].id())
+        self.expectThat(
+            tests[0].id(), EndsWith('ReferenceTest.test_pass(demo)'))
         self.assertEqual([([('demo', {})], test)], log)
 
     def test_all_scenarios_yielded(self):
@@ -70,12 +72,10 @@ class TestGenerateScenarios(testtools.TestCase):
                 pass
         test = ReferenceTest("test_pass")
         tests = list(generate_scenarios(test))
-        self.assertEqual(
-            'testscenarios.tests.test_scenarios.ReferenceTest.test_pass(1)',
-            tests[0].id())
-        self.assertEqual(
-            'testscenarios.tests.test_scenarios.ReferenceTest.test_pass(2)',
-            tests[1].id())
+        self.expectThat(
+            tests[0].id(), EndsWith('ReferenceTest.test_pass(1)'))
+        self.expectThat(
+            tests[1].id(), EndsWith('ReferenceTest.test_pass(2)'))
 
     def test_scenarios_attribute_cleared(self):
         class ReferenceTest(unittest.TestCase):
@@ -132,11 +132,11 @@ class TestApplyScenario(testtools.TestCase):
 
     def test_sets_specified_id(self):
         raw_test = self.ReferenceTest('test_pass')
-        raw_id = "testscenarios.tests.test_scenarios.ReferenceTest.test_pass"
+        raw_id = "ReferenceTest.test_pass"
         scenario_name = self.scenario_name
         expect_id = "%(raw_id)s(%(scenario_name)s)" % vars()
         modified_test = apply_scenario(self.scenario, raw_test)
-        self.assertEqual(expect_id, modified_test.id())
+        self.expectThat(modified_test.id(), EndsWith(expect_id))
 
     def test_sets_specified_attributes(self):
         raw_test = self.ReferenceTest('test_pass')
@@ -151,6 +151,7 @@ class TestApplyScenario(testtools.TestCase):
         scenario_name = self.scenario_name
         expect_desc = "%(raw_desc)s (%(scenario_name)s)" % vars()
         self.assertEqual(expect_desc, modified_test.shortDescription())
+
 
 class TestApplyScenarios(testtools.TestCase):
 

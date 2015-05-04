@@ -27,5 +27,8 @@ setup(name="testscenarios",
           ],
       install_requires = [
         'testtools',
-        ]
+        ],
+      tests_require = [
+        'testtools >= 1',
+        ],
       )
