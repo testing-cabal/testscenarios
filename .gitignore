@@ -1,0 +1,14 @@
+TAGS
+tags
+lib/testtools
+MANIFEST
+dist
+*~
+.eggs
+.*.swp
+testscenarios.egg-info
+*.pyc
+__pycache__
+*.egg
+ChangeLog
+AUTHORS

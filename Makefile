@@ -1,4 +1,4 @@
-PYTHONPATH:=$(shell pwd)/lib:${PYTHONPATH}
+PYTHONPATH:=$(shell pwd):${PYTHONPATH}
 PYTHON ?= python
 
 all: check
@@ -10,10 +10,13 @@ check:
 clean:
 	find . -name '*.pyc' -print0 | xargs -0 rm -f
 
-TAGS: lib/testscenarios/*.py lib/testscenarios/tests/*.py
-	ctags -e -R lib/testscenarios/
+TAGS: testscenarios/*.py testscenarios/tests/*.py
+	ctags -e -R testscenarios/
 
-tags: lib/testscenarios/*.py lib/testscenarios/tests/*.py
-	ctags -R lib/testscenarios/
+tags: testscenarios/*.py testscenarios/tests/*.py
+	ctags -R testscenarios/
 
-.PHONY: all check clean
+release:
+	python setup.py sdist bdist_wheel upload -s
+
+.PHONY: all check release

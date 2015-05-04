@@ -25,7 +25,7 @@ different situations).
 Dependencies
 ============
 
-* Python 2.4+
+* Python 2.6+
 * testtools <https://launchpad.net/testtools>
 
 
