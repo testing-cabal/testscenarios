@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install flake8 testtools
+        python -m pip install testtools pbr
     - name: Test with testtools
       run: |
         python -m testtools.run testscenarios.tests.test_suite
