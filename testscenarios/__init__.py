@@ -70,6 +70,6 @@ def test_suite():
     return testscenarios.tests.test_suite()
 
 
-def load_tests(standard_tests, module, loader):
+def load_tests(loader, standard_tests, module):
     standard_tests.addTests(loader.loadTestsFromNames(["testscenarios.tests"]))
     return standard_tests
