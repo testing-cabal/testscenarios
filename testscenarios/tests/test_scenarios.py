@@ -19,8 +19,8 @@ import unittest
 
 import testtools
 from testtools.matchers import EndsWith
+from typing import cast
 
-from testtools.tests.helpers import LoggingResult
 
 import testscenarios
 from testscenarios.scenarios import (
@@ -134,7 +134,7 @@ class TestApplyScenario(testtools.TestCase):
         raw_test = self.ReferenceTest('test_pass')
         raw_id = "ReferenceTest.test_pass"
         scenario_name = self.scenario_name
-        expect_id = "%(raw_id)s(%(scenario_name)s)" % vars()
+        expect_id = f"{raw_id}({scenario_name})"
         modified_test = apply_scenario(self.scenario, raw_test)
         self.expectThat(modified_test.id(), EndsWith(expect_id))
 
@@ -146,10 +146,10 @@ class TestApplyScenario(testtools.TestCase):
     def test_appends_scenario_name_to_short_description(self):
         raw_test = self.ReferenceTest('test_pass_with_docstring')
         modified_test = apply_scenario(self.scenario, raw_test)
-        raw_doc = self.ReferenceTest.test_pass_with_docstring.__doc__
+        raw_doc = cast(str, self.ReferenceTest.test_pass_with_docstring.__doc__)
         raw_desc = raw_doc.split("\n")[0].strip()
         scenario_name = self.scenario_name
-        expect_desc = "%(raw_desc)s (%(scenario_name)s)" % vars()
+        expect_desc = f"{raw_desc} ({scenario_name})"
         self.assertEqual(expect_desc, modified_test.shortDescription())
 
 
@@ -163,7 +163,7 @@ class TestApplyScenarios(testtools.TestCase):
             log.append((scenario, test))
         testscenarios.scenarios.apply_scenario = capture
         scenarios = ["foo", "bar"]
-        result = list(apply_scenarios(scenarios, "test"))
+        list(apply_scenarios(scenarios, "test"))
         self.assertEqual([('foo', 'test'), ('bar', 'test')], log)
 
     def test_preserves_scenarios_attribute(self):

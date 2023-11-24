@@ -24,11 +24,9 @@ __all__ = [
     ]
 
 from itertools import (
-    chain,
     product,
     )
 import sys
-import unittest
 
 from testtools.testcase import clone_test_with_new_id
 from testtools import iterate_tests
@@ -159,7 +157,7 @@ def per_module_scenarios(attribute_name, modules):
     for short_name, module_name in modules:
         try:
             mod = __import__(module_name, {}, {}, [''])
-        except:
+        except BaseException:
             mod = sys.exc_info()
         scenarios.append((
             short_name, 

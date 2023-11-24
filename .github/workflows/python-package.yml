@@ -22,7 +22,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install testtools pbr
+        python -m pip install testtools pbr ruff
+    - name: Run ruff
+      run: |
+        python -m ruff check .
     - name: Test with testtools
       run: |
         python -m testtools.run testscenarios.tests.test_suite
