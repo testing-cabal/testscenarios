@@ -22,7 +22,6 @@ import testscenarios
 
 
 def test_suite():
-    result = unittest.TestSuite()
     standard_tests = unittest.TestSuite()
     module = sys.modules['testscenarios.tests']
     loader = unittest.TestLoader()

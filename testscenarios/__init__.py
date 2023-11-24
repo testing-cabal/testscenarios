@@ -55,18 +55,19 @@ __all__ = [
     ]
 
 
-from testscenarios.scenarios import (
+from testscenarios.scenarios import (  # noqa: E402
     apply_scenario,
+    apply_scenarios,
     generate_scenarios,
     load_tests_apply_scenarios,
     multiply_scenarios,
     per_module_scenarios,
     )
-from testscenarios.testcase import TestWithScenarios, WithScenarios
+from testscenarios.testcase import TestWithScenarios, WithScenarios  # noqa: E402
 
 
 def test_suite():
-    import testscenarios.tests
+    import testscenarios.tests  # noqa: F401
     return testscenarios.tests.test_suite()
 
 
