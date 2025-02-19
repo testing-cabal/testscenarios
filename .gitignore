@@ -2,6 +2,7 @@ TAGS
 tags
 lib/testtools
 MANIFEST
+build
 dist
 *~
 .eggs

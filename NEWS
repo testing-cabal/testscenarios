@@ -6,6 +6,21 @@ testscenarios release notes
 IN DEVELOPMENT
 ~~~~~~~~~~~~~~
 
+0.6
+~~~
+
+IMPROVEMENTS
+------------
+
+* Claim Python 3.8 - 3.13 support. (Jürgen Gmach)
+
+CHANGES
+-------
+
+* Dropped support for Python < 3.8. (Jürgen Gmach)
+
+* Cleaned up meta data. (Jürgen Gmach)
+
 0.5
 ~~~
 
