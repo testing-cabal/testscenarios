@@ -25,8 +25,7 @@ different situations).
 Dependencies
 ============
 
-* Python 2.6+
-* testtools <https://launchpad.net/testtools>
+* testtools <https://github.com/testing-cabal/testtools>
 
 
 Why TestScenarios
