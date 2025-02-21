@@ -1,0 +1,59 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "testscenarios"
+description = "Testscenarios, a pyunit extension for dependency injection"
+readme = "README.rst"
+classifiers = [
+    "Development Status :: 6 - Mature",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Testing",
+]
+authors = [{name = "Testing-cabal", email = "testing-cabal@lists.launchpad.net"}]
+license = {text = "Apache-2.0 or BSD"}
+requires-python = ">=3.10"
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://launchpad.net/testscenarios"
+"Bug Tracker" = "https://bugs.launchpad.net/testscenarios"
+"Source Code" = "https://github.com/testing-cabal/testscenarios"
+
+[project.optional-dependencies]
+"test" = ["testtools"]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "testscenarios/_version.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "testscenarios*",
+    "APACHE-2.0",
+    "AUTHORS",
+    "BSD",
+    "ChangeLog",
+    "COPYING",
+    "GOALS",
+    "HACKING",
+    "Makefile",
+    "NEWS",
+    "README.rst",
+    "tox.ini",
+    "doc/*.py",
+    ]

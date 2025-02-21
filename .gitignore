@@ -1,7 +1,6 @@
 TAGS
 tags
 lib/testtools
-MANIFEST
 build
 dist
 *~
@@ -11,5 +10,5 @@ testscenarios.egg-info
 *.pyc
 __pycache__
 *.egg
-ChangeLog
-AUTHORS
+testscenarios/_version.py
+tox.ini

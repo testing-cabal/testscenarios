@@ -45,15 +45,16 @@ __version__ = _version.semantic_version().version_tuple()
 version = _version.release_string()
 
 __all__ = [
-    "TestWithScenarios",
-    "WithScenarios",
-    "apply_scenario",
-    "apply_scenarios",
-    "generate_scenarios",
-    "load_tests_apply_scenarios",
-    "multiply_scenarios",
-    "per_module_scenarios",
-]
+    'TestWithScenarios',
+    'WithScenarios',
+    'apply_scenario',
+    'apply_scenarios',
+    'generate_scenarios',
+    'load_tests_apply_scenarios',
+    'multiply_scenarios',
+    'per_module_scenarios',
+    '__version__',
+    ]
 
 
 from testscenarios.scenarios import (  # noqa: E402
