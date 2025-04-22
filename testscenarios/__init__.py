@@ -2,12 +2,12 @@
 #  dependency injection ('scenarios') by tests.
 #
 # Copyright (c) 2009, Robert Collins <robertc@robertcollins.net>
-# 
+#
 # Licensed under either the Apache License, Version 2.0 or the BSD 3-clause
 # license at the users choice. A copy of both licenses are available in the
 # project source as Apache-2.0 and BSD. You may not use this file except in
 # compliance with one of these two licences.
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under these licenses is distributed on an "AS IS" BASIS, WITHOUT
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -39,20 +39,21 @@ methods for details.
 # If the releaselevel is 'final', then the tarball will be major.minor.micro.
 # Otherwise it is major.minor.micro~$(revno).
 from pbr.version import VersionInfo
-_version = VersionInfo('testscenarios')
+
+_version = VersionInfo("testscenarios")
 __version__ = _version.semantic_version().version_tuple()
 version = _version.release_string()
 
 __all__ = [
-    'TestWithScenarios',
-    'WithScenarios',
-    'apply_scenario',
-    'apply_scenarios',
-    'generate_scenarios',
-    'load_tests_apply_scenarios',
-    'multiply_scenarios',
-    'per_module_scenarios',
-    ]
+    "TestWithScenarios",
+    "WithScenarios",
+    "apply_scenario",
+    "apply_scenarios",
+    "generate_scenarios",
+    "load_tests_apply_scenarios",
+    "multiply_scenarios",
+    "per_module_scenarios",
+]
 
 
 from testscenarios.scenarios import (  # noqa: E402
@@ -62,12 +63,13 @@ from testscenarios.scenarios import (  # noqa: E402
     load_tests_apply_scenarios,
     multiply_scenarios,
     per_module_scenarios,
-    )
+)
 from testscenarios.testcase import TestWithScenarios, WithScenarios  # noqa: E402
 
 
 def test_suite():
     import testscenarios.tests  # noqa: F401
+
     return testscenarios.tests.test_suite()
 
 

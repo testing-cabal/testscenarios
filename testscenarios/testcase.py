@@ -2,12 +2,12 @@
 #  dependency injection ('scenarios') by tests.
 #
 # Copyright (c) 2009, Robert Collins <robertc@robertcollins.net>
-# 
+#
 # Licensed under either the Apache License, Version 2.0 or the BSD 3-clause
 # license at the users choice. A copy of both licenses are available in the
 # project source as Apache-2.0 and BSD. You may not use this file except in
 # compliance with one of these two licences.
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under these licenses is distributed on an "AS IS" BASIS, WITHOUT
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -15,9 +15,9 @@
 # limitations under that license.
 
 __all__ = [
-    'TestWithScenarios',
-    'WithScenarios',
-    ]
+    "TestWithScenarios",
+    "WithScenarios",
+]
 
 import unittest
 
@@ -32,12 +32,16 @@ _doc = """
     compatibly with WithScenarios).
     """
 
+
 class WithScenarios(object):
-    __doc__ = """A mixin for TestCase with support for declarative scenarios.
-    """ + _doc
+    __doc__ = (
+        """A mixin for TestCase with support for declarative scenarios.
+    """
+        + _doc
+    )
 
     def _get_scenarios(self):
-        return getattr(self, 'scenarios', None)
+        return getattr(self, "scenarios", None)
 
     def countTestCases(self):
         scenarios = self._get_scenarios()
@@ -65,5 +69,8 @@ class WithScenarios(object):
 
 
 class TestWithScenarios(WithScenarios, unittest.TestCase):
-    __doc__ = """Unittest TestCase with support for declarative scenarios.
-    """ + _doc
+    __doc__ = (
+        """Unittest TestCase with support for declarative scenarios.
+    """
+        + _doc
+    )
