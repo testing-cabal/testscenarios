@@ -26,6 +26,9 @@ jobs:
     - name: Run ruff
       run: |
         python -m ruff check .
+    - name: Run ruff format
+      run: |
+        python -m ruff format --check .
     - name: Test with testtools
       run: |
         python -m testtools.run testscenarios.tests.test_suite
