@@ -25,10 +25,10 @@ def test_suite():
     standard_tests = unittest.TestSuite()
     module = sys.modules["testscenarios.tests"]
     loader = unittest.TestLoader()
-    return load_tests(standard_tests, module, loader)
+    return load_tests(loader, standard_tests, module)
 
 
-def load_tests(standard_tests, module, loader):
+def load_tests(loader, standard_tests, module):
     test_modules = [
         "testcase",
         "scenarios",
