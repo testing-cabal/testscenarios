@@ -25,6 +25,7 @@ different situations).
 Dependencies
 ============
 
+* Python 3.10+
 * testtools <https://github.com/testing-cabal/testtools>
 
 
