@@ -28,8 +28,8 @@ requires-python = ">=3.10"
 dynamic = ["version"]
 
 [project.urls]
-Homepage = "https://launchpad.net/testscenarios"
-"Bug Tracker" = "https://bugs.launchpad.net/testscenarios"
+Homepage = "https://github.com/testing-cabal/testscenarios"
+"Bug Tracker" = "https://github.com/testing-cabal/testscenarios/issues"
 "Source Code" = "https://github.com/testing-cabal/testscenarios"
 
 [project.optional-dependencies]
