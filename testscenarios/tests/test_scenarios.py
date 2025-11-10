@@ -204,7 +204,7 @@ class TestLoadTests(testtools.TestCase):
             unittest.TestLoader(), [self.SampleTest("test_nothing")], None
         )
         result_tests = list(testtools.iterate_tests(suite))
-        self.assertEquals(2, len(result_tests), result_tests)
+        self.assertEqual(2, len(result_tests), result_tests)
 
     def test_load_tests_apply_scenarios_old_style(self):
         """Call load_tests in the way used by bzr."""
@@ -214,7 +214,7 @@ class TestLoadTests(testtools.TestCase):
             unittest.TestLoader(),
         )
         result_tests = list(testtools.iterate_tests(suite))
-        self.assertEquals(2, len(result_tests), result_tests)
+        self.assertEqual(2, len(result_tests), result_tests)
 
 
 class TestMultiplyScenarios(testtools.TestCase):

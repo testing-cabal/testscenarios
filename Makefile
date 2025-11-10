@@ -1,5 +1,5 @@
 PYTHONPATH:=$(shell pwd):${PYTHONPATH}
-PYTHON ?= python
+PYTHON ?= python3
 
 all: check
 
@@ -16,7 +16,4 @@ TAGS: testscenarios/*.py testscenarios/tests/*.py
 tags: testscenarios/*.py testscenarios/tests/*.py
 	ctags -R testscenarios/
 
-release:
-	python setup.py sdist bdist_wheel upload -s
-
-.PHONY: all check release
+.PHONY: all check
