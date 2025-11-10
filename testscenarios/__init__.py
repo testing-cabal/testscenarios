@@ -27,34 +27,17 @@ See the README for a manual, and the docstrings on individual functions and
 methods for details.
 """
 
-# same format as sys.version_info: "A tuple containing the five components of
-# the version number: major, minor, micro, releaselevel, and serial. All
-# values except releaselevel are integers; the release level is 'alpha',
-# 'beta', 'candidate', or 'final'. The version_info value corresponding to the
-# Python version 2.0 is (2, 0, 0, 'final', 0)."  Additionally we use a
-# releaselevel of 'dev' for unreleased under-development code.
-#
-# If the releaselevel is 'alpha' then the major/minor/micro components are not
-# established at this point, and setup.py will use a version of next-$(revno).
-# If the releaselevel is 'final', then the tarball will be major.minor.micro.
-# Otherwise it is major.minor.micro~$(revno).
-from pbr.version import VersionInfo
-
-_version = VersionInfo("testscenarios")
-__version__ = _version.semantic_version().version_tuple()
-version = _version.release_string()
-
 __all__ = [
-    'TestWithScenarios',
-    'WithScenarios',
-    'apply_scenario',
-    'apply_scenarios',
-    'generate_scenarios',
-    'load_tests_apply_scenarios',
-    'multiply_scenarios',
-    'per_module_scenarios',
-    '__version__',
-    ]
+    "TestWithScenarios",
+    "WithScenarios",
+    "apply_scenario",
+    "apply_scenarios",
+    "generate_scenarios",
+    "load_tests_apply_scenarios",
+    "multiply_scenarios",
+    "per_module_scenarios",
+    "__version__",
+]
 
 
 from testscenarios.scenarios import (  # noqa: E402
@@ -77,3 +60,53 @@ def test_suite():
 def load_tests(standard_tests, module, loader):
     standard_tests.addTests(loader.loadTestsFromNames(["testscenarios.tests"]))
     return standard_tests
+
+
+def __get_git_version():
+    import os
+    import subprocess
+
+    cwd = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
+
+    try:
+        out = subprocess.check_output(
+            ["git", "describe"], stderr=subprocess.STDOUT, cwd=cwd
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return None
+
+    try:
+        version = out.strip().decode("utf-8")
+    except UnicodeDecodeError:
+        return None
+
+    if "-" in version:  # after tag
+        # convert version-N-githash to version.postN+githash
+        return version.replace("-", ".post", 1).replace("-g", "+git", 1)
+    else:
+        return version
+
+
+# same format as sys.version_info: "A tuple containing the five components of
+# the version number: major, minor, micro, releaselevel, and serial. All
+# values except releaselevel are integers; the release level is 'alpha',
+# 'beta', 'candidate', or 'final'. The version_info value corresponding to the
+# Python version 2.0 is (2, 0, 0, 'final', 0)."  Additionally we use a
+# releaselevel of 'dev' for unreleased under-development code.
+#
+# If the releaselevel is 'alpha' then the major/minor/micro components are not
+# established at this point, and setup.py will use a version of next-$(revno).
+# If the releaselevel is 'final', then the tarball will be major.minor.micro.
+# Otherwise it is major.minor.micro~$(revno).
+
+try:
+    from ._version import __version__, version
+except ModuleNotFoundError:
+    # package is not installed
+    if version := __get_git_version():
+        # we're in a git repo
+        __version__ = tuple([int(v) if v.isdigit() else v for v in version.split(".")])
+    else:
+        # we're working with a tarball or similar
+        version = "0.0.0"
+        __version__ = (0, 0, 0)

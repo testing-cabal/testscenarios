@@ -1,5 +1,5 @@
 PYTHONPATH:=$(shell pwd):${PYTHONPATH}
-PYTHON ?= python
+PYTHON ?= python3
 
 all: check
 
