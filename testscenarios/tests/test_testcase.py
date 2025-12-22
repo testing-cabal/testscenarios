@@ -18,9 +18,67 @@ import unittest
 
 import testtools
 from testtools.matchers import EndsWith
-from testtools.tests.helpers import LoggingResult
 
 import testscenarios
+
+
+class LoggingResult(testtools.TestResult):
+    """TestResult that logs its event to a list."""
+
+    def __init__(self, log):
+        self._events = log
+        super().__init__()
+
+    def startTest(self, test):
+        self._events.append(("startTest", test))
+        super().startTest(test)
+
+    def stop(self):
+        self._events.append("stop")
+        super().stop()
+
+    def stopTest(self, test):
+        self._events.append(("stopTest", test))
+        super().stopTest(test)
+
+    def addFailure(self, test, err=None, details=None):
+        self._events.append(("addFailure", test, err))
+        super().addFailure(test, err, details)
+
+    def addError(self, test, err=None, details=None):
+        self._events.append(("addError", test, err))
+        super().addError(test, err, details)
+
+    def addSkip(self, test, reason=None, details=None):
+        # Extract reason from details if not provided directly
+        if reason is None and details and "reason" in details:
+            reason = details["reason"].as_text()
+        self._events.append(("addSkip", test, reason))
+        super().addSkip(test, reason, details)
+
+    def addSuccess(self, test, details=None):
+        self._events.append(("addSuccess", test))
+        super().addSuccess(test, details)
+
+    def startTestRun(self):
+        self._events.append("startTestRun")
+        super().startTestRun()
+
+    def stopTestRun(self):
+        self._events.append("stopTestRun")
+        super().stopTestRun()
+
+    def done(self):
+        self._events.append("done")
+        super().done()
+
+    def tags(self, new_tags, gone_tags):
+        self._events.append(("tags", new_tags, gone_tags))
+        super().tags(new_tags, gone_tags)
+
+    def time(self, a_datetime):
+        self._events.append(("time", a_datetime))
+        super().time(a_datetime)
 
 
 class TestTestWithScenarios(testtools.TestCase):
