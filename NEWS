@@ -2,15 +2,8 @@
 testscenarios release notes
 ---------------------------
 
-
 IN DEVELOPMENT
 ~~~~~~~~~~~~~~
-
-CHANGES
--------
-
-* Dropped support for Python 3.7, 3.8, and 3.9. Minimum supported version is
-  now Python 3.10. Added support for Python 3.12, 3.13, and 3.14.
 
 0.6
 ~~~
@@ -18,12 +11,19 @@ CHANGES
 IMPROVEMENTS
 ------------
 
-* Claim Python 3.8 - 3.13 support. (Jürgen Gmach)
+* Claim Python 3.10 - 3.14 support. (Jürgen Gmach, Jelmer Vernooĳ)
+
+* Fix compatiblility with recent versions of `fixtures`, `testtools`
+  (Jelmer Vernooĳ)
+
+* Format with ``ruff format``. (Jelmer Vernooĳ)
+
+* Use ruff for linting. (Jelmer Vernooĳ)
 
 CHANGES
 -------
 
-* Dropped support for Python < 3.8. (Jürgen Gmach)
+* Dropped support for Python < 3.10. (Jürgen Gmach, Jelmer Vernooĳ)
 
 * Cleaned up meta data. (Jürgen Gmach)
 
