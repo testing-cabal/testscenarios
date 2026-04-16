@@ -15,20 +15,18 @@
 # limitations under that license.
 
 import doctest
-import sys
 import unittest
 
 import testscenarios
 
 
 def test_suite():
-    standard_tests = unittest.TestSuite()
-    module = sys.modules["testscenarios.tests"]
     loader = unittest.TestLoader()
-    return load_tests(standard_tests, module, loader)
+    standard_tests = unittest.TestSuite()
+    return load_tests(loader, standard_tests, None)
 
 
-def load_tests(standard_tests, module, loader):
+def load_tests(loader, standard_tests, pattern):
     test_modules = [
         "testcase",
         "scenarios",
