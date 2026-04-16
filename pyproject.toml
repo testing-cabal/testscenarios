@@ -50,16 +50,13 @@ __version__ = {version_tuple!r}
 [tool.hatch.build.targets.sdist]
 include = [
     "testscenarios*",
-    "APACHE-2.0",
-    "AUTHORS",
+    "Apache-2.0",
     "BSD",
-    "ChangeLog",
     "COPYING",
     "GOALS",
     "HACKING",
     "Makefile",
     "NEWS",
     "README.rst",
-    "tox.ini",
     "doc/*.py",
     ]
