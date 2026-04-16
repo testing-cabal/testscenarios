@@ -23,7 +23,7 @@ classifiers = [
     "Topic :: Software Development :: Testing",
 ]
 authors = [{name = "Testing-cabal", email = "testing-cabal@lists.launchpad.net"}]
-license = {text = "Apache-2.0 or BSD"}
+license = {text = "Apache-2.0 OR BSD-3-Clause"}
 requires-python = ">=3.10"
 dynamic = ["version"]
 
