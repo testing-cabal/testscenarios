@@ -5,6 +5,16 @@ testscenarios release notes
 IN DEVELOPMENT
 ~~~~~~~~~~~~~~
 
+0.6.1
+~~~~~
+
+IMPROVEMENTS
+------------
+
+* Fix package metadata (Mikel Olasagasti Uranga)
+
+* Fix test loading (Mikel Olasagasti Uranga)
+
 0.6
 ~~~
 
