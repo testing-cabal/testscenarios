@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "testscenarios"
-description = "Testscenarios, a pyunit extension for dependency injection"
+description = "Testscenarios, a unittest extension for dependency injection"
 readme = "README.rst"
 classifiers = [
     "Development Status :: 6 - Mature",
